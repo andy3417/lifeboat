@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lifeboat — Argumentation Activity</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f8f7f4;color:#1a1a1a;padding:1.5rem;min-height:100vh}
+.app{max-width:900px;margin:0 auto}
+h1{font-size:22px;font-weight:500;margin-bottom:4px;color:#1a1a1a}
+.subtitle{font-size:13px;color:#666;margin-bottom:1.5rem}
+.scene{background:#EEF5FC;border-left:3px solid #378ADD;padding:1rem 1.25rem;margin-bottom:1.5rem;border-radius:0 8px 8px 0}
+.scene p{font-size:13px;color:#444;line-height:1.7}
+.scene strong{color:#1a1a1a;font-weight:500}
+.boat-bar{display:flex;align-items:center;gap:16px;padding:1rem 1.25rem;background:white;border:0.5px solid #ddd;border-radius:12px;margin-bottom:1rem;flex-wrap:wrap}
+.boat-label{font-size:12px;color:#666;margin-bottom:2px}
+.seats-count{font-size:22px;font-weight:500}
+.seats-count.ok{color:#1D9E75}
+.seats-count.warn{color:#E24B4A}
+.seats-visual{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.seat{width:28px;height:28px;border-radius:50%;border:1.5px solid #ddd;background:#f0f0f0;transition:background 0.2s,border-color 0.2s}
+.seat.filled{background:#1D9E75;border-color:#0F6E56}
+.seat.over{background:#E24B4A;border-color:#A32D2D}
+.warn-msg{font-size:12px;color:#A32D2D;font-weight:500}
+.constraint-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem}
+.badge{font-size:11px;padding:3px 10px;border-radius:20px;background:#FAEEDA;color:#633806;border:0.5px solid #EF9F27}
+.section-label{font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:1.5rem}
+.char-card{background:white;border:0.5px solid #ddd;border-radius:12px;padding:1rem;transition:border-color 0.15s}
+.char-card.selected-in{border:2px solid #1D9E75;background:#E1F5EE}
+.char-card.selected-out{border:2px solid #E24B4A;background:#FCEBEB}
+.char-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.char-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
+.char-name{font-size:14px;font-weight:500;color:#1a1a1a}
+.char-role{font-size:11px;color:#888}
+.char-flags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;min-height:4px}
+.flag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;background:#FAEEDA;color:#633806;border:0.5px solid #EF9F27}
+.char-bio{font-size:12px;color:#555;line-height:1.6;margin-bottom:8px;display:none}
+.char-bio.open{display:block}
+.expand-btn{font-size:11px;color:#888;background:none;border:none;cursor:pointer;padding:2px 0;text-align:left;font-family:inherit;display:block;margin-bottom:8px}
+.expand-btn:hover{color:#444}
+.decision-row{display:flex;gap:6px}
+.dec-btn{flex:1;padding:7px 0;font-size:12px;border-radius:8px;border:0.5px solid #ddd;background:#f5f5f3;color:#1a1a1a;cursor:pointer;font-family:inherit;transition:background 0.15s}
+.dec-btn:hover{background:#ebebeb}
+.dec-btn.in.active{background:#1D9E75;border-color:#0F6E56;color:white}
+.dec-btn.out.active{background:#E24B4A;border-color:#A32D2D;color:white}
+.reasoning-wrap{margin-top:8px;display:none}
+.reasoning-wrap.open{display:block}
+.reasoning-wrap textarea{width:100%;font-size:12px;padding:6px 8px;border:0.5px solid #ddd;border-radius:8px;font-family:inherit;background:#f8f7f4;color:#1a1a1a;resize:none;line-height:1.5}
+.reasoning-wrap textarea:focus{outline:none;border-color:#aaa;background:white}
+.linked-hint{font-size:11px;color:#854F0B;margin-top:6px;display:none;font-style:italic}
+.linked-hint.show{display:block}
+.submit-area{text-align:center;margin:1.5rem 0}
+.submit-btn{padding:10px 28px;font-size:14px;border-radius:8px;border:0.5px solid #ddd;background:white;color:#1a1a1a;cursor:pointer;font-family:inherit;transition:background 0.15s}
+.submit-btn:hover{background:#f0f0f0}
+.submit-btn.ready{background:#1D9E75;border-color:#0F6E56;color:white}
+.submit-btn.ready:hover{background:#0F6E56}
+.submit-hint{font-size:12px;color:#888;margin-top:6px}
+.summary-panel{background:white;border:0.5px solid #ddd;border-radius:12px;padding:1.25rem;margin-top:1.5rem;display:none}
+.summary-panel.open{display:block}
+.summary-title{font-size:16px;font-weight:500;margin-bottom:1rem;color:#1a1a1a}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.summary-col-head{font-size:12px;font-weight:500;margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid #eee}
+.summary-col-head.in{color:#0F6E56}
+.summary-col-head.out{color:#A32D2D}
+.summary-person{font-size:12px;color:#1a1a1a;padding:5px 0;border-bottom:0.5px solid #f0f0f0}
+.summary-person:last-child{border-bottom:none}
+.summary-reasoning{font-size:11px;color:#888;font-style:italic;margin-top:2px;line-height:1.4}
+.constraint-warn{font-size:12px;color:#A32D2D;padding:6px 8px 6px 10px;border-left:3px solid #E24B4A;margin-bottom:6px}
+.copy-area{width:100%;font-size:12px;font-family:monospace;border:0.5px solid #ddd;border-radius:8px;padding:8px;background:#f8f7f4;color:#1a1a1a;resize:vertical;min-height:80px;margin-top:10px;display:none}
+.copy-area.open{display:block}
+.summary-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+@media(max-width:600px){
+  .summary-grid{grid-template-columns:1fr}
+  .boat-bar{gap:8px}
+  body{padding:1rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<h1>The Lifeboat</h1>
+<p class="subtitle">An argumentation activity</p>
+
+<div class="scene">
+  <p><strong>The situation:</strong> An ocean liner has struck an iceberg and is rapidly sinking. One lifeboat remains. It can hold <strong>seven people</strong> — but ten are hoping to board. Read each passenger's profile carefully, decide who gets a seat and who must stay behind, and write a brief reason for every decision. Be prepared to defend your choices in discussion.</p>
+</div>
+
+<div class="boat-bar">
+  <div>
+    <div class="boat-label">Seats remaining</div>
+    <div class="seats-count ok" id="seats-count">7 / 7</div>
+  </div>
+  <div class="seats-visual" id="seats-visual"></div>
+  <div id="warn-msg"></div>
+</div>
+
+<div class="constraint-badges">
+  <span class="badge">Sammy + Spot occupy 2 seats</span>
+  <span class="badge">Amy refuses to board without Patty</span>
+  <span class="badge">Chaplain Kang has volunteered to stay</span>
+</div>
+
+<div class="section-label">The passengers — click "Read full profile" to learn more</div>
+<div class="char-grid" id="char-grid"></div>
+
+<div class="submit-area">
+  <button class="submit-btn" id="submit-btn" onclick="showSummary()">View my summary</button>
+  <div class="submit-hint" id="submit-hint">Decide on all 10 passengers to continue</div>
+</div>
+
+<div class="summary-panel" id="summary-panel">
+  <div class="summary-title">Your lifeboat decisions</div>
+  <div class="summary-grid">
+    <div>
+      <div class="summary-col-head in" id="in-head">On the boat</div>
+      <div id="summary-in"></div>
+    </div>
+    <div>
+      <div class="summary-col-head out">Left behind</div>
+      <div id="summary-out"></div>
+    </div>
+  </div>
+  <div id="constraint-warnings"></div>
+  <div class="summary-actions">
+    <button class="submit-btn" onclick="doCopy()">Copy as text</button>
+    <button class="submit-btn" onclick="resetAll()">Start over</button>
+  </div>
+  <textarea class="copy-area" id="copy-area" readonly></textarea>
+</div>
+
+</div>
+
+<script>
+var CHARS = [
+  {id:'robin', name:'Captain Robin', role:'Ship captain', initials:'CR', color:'#185FA5', bg:'#E6F1FB',
+   bio:'Has been sailing for over 30 years and has captained this ship for the last 10. She has no spouse or immediate family. She also has a rather severe drinking problem.',
+   flags:[], seats:1, link:null},
+  {id:'joe', name:'Joe Schmoe', role:'Maritime author', initials:'JS', color:'#854F0B', bg:'#FAEEDA',
+   bio:'Author of many how-to manuals on sailing, navigation, and engine propulsion. He is aboard to do research. Though he has written extensively, he has never actually put theory into practice.',
+   flags:[], seats:1, link:null},
+  {id:'nakamura', name:'Dr. Nakamura', role:'General practitioner', initials:'DN', color:'#3C3489', bg:'#EEEDFE',
+   bio:'A skilled general practitioner with a specialty in treating trauma cases. Both her children were killed in the initial moments of the wreck. She harbors great animosity toward the captain and is currently extremely apathetic and ambivalent toward those around her.',
+   flags:[], seats:1, link:null},
+  {id:'patty', name:'Patty O\'Brian', role:'Former frontiersman', initials:'PO', color:'#0F6E56', bg:'#E1F5EE',
+   bio:'Spent the last thirty years in the Alaskan wilderness. She was once a strong frontiersman but now depends upon her daughter due to Alzheimer\'s.',
+   flags:[{t:'Linked: Amy refuses to board without her'}], seats:1, link:'amy'},
+  {id:'sammy', name:'Sammy & Spot', role:'Child + service dog', initials:'SS', color:'#993556', bg:'#FBEAF0',
+   bio:'A six-year-old boy who was orphaned in the wreck. He has a rare disease and doctors believe he will not live past 16 years of age. He has a service dog, Spot, who must accompany him — Spot will take up one of the remaining seats. Sammy refuses to leave the ship without Spot.',
+   flags:[{t:'Sammy + Spot occupy 2 seats'}], seats:2, link:null},
+  {id:'tilly', name:'Tilly Sharma', role:'Personal trainer', initials:'TS', color:'#993C1D', bg:'#FAECE7',
+   bio:'The "personal trainer to the stars," helping clients like Gal Gadot and The Rock build strong bodies. She has the strength of ten body builders. She is also a diabetic, having only a short supply of insulin remaining.',
+   flags:[], seats:1, link:null},
+  {id:'kang', name:'Chaplain Kang', role:'Ship chaplain', initials:'CK', color:'#444441', bg:'#F1EFE8',
+   bio:'The chaplain of the ship. Volunteering to be cast out, he nevertheless seems to have a calming effect on the entire group.',
+   flags:[{t:'Has volunteered to stay behind'}], seats:1, link:null},
+  {id:'amy', name:'Amy O\'Brian', role:'Fishing vessel owner', initials:'AO', color:'#0F6E56', bg:'#E1F5EE',
+   bio:'The young, vibrant, and strong daughter of Patty O\'Brian, having lived with her in Alaska while owning and operating her own fishing vessel. She refuses to board the lifeboat without her mother.',
+   flags:[{t:'Linked: refuses to board without Patty'}], seats:1, link:'patty'},
+  {id:'larry', name:'Larry Moony', role:'Passenger', initials:'LM', color:'#A32D2D', bg:'#FCEBEB',
+   bio:'A hysterical basket case. However, he clutches tightly to his chest an essential survival pack, filled with canned goods, a water pump, and a flare gun. He threatens to throw the pack overboard unless given a spot on the lifeboat.',
+   flags:[], seats:1, link:null},
+  {id:'ellie', name:'Ellie Santiago', role:'Archaeology student', initials:'ES', color:'#534AB7', bg:'#EEEDFE',
+   bio:'A 26-year-old archaeology major, five months pregnant and newly married. She was on her way to meet her husband on a dig before the disaster struck. The pregnancy was due to a short fling with an Italian man two months after her marriage. She has not yet informed her husband of the affair.',
+   flags:[], seats:1, link:null},
+];
+
+var decisions = {};
+var reasoning = {};
+
+function initSeats() {
+  var vis = document.getElementById('seats-visual');
+  vis.innerHTML = '';
+  for (var i = 0; i < 7; i++) {
+    var s = document.createElement('div');
+    s.className = 'seat';
+    s.id = 'seat-' + i;
+    vis.appendChild(s);
+  }
+}
+
+function updateSeats() {
+  var used = 0;
+  CHARS.forEach(function(c) {
+    if (decisions[c.id] === 'in') used += c.seats;
+  });
+  var rem = 7 - used;
+  var el = document.getElementById('seats-count');
+  el.textContent = (rem < 0 ? 0 : rem) + ' / 7';
+  el.className = 'seats-count ' + (used > 7 ? 'warn' : 'ok');
+  var wmsg = document.getElementById('warn-msg');
+  wmsg.innerHTML = used > 7 ? '<span class="warn-msg">Over capacity by ' + (used - 7) + ' seat' + (used - 7 !== 1 ? 's' : '') + '</span>' : '';
+  for (var i = 0; i < 7; i++) {
+    var seat = document.getElementById('seat-' + i);
+    if (!seat) continue;
+    if (i < used && used <= 7) seat.className = 'seat filled';
+    else if (i < used) seat.className = 'seat over';
+    else seat.className = 'seat';
+  }
+}
+
+function buildGrid() {
+  var grid = document.getElementById('char-grid');
+  grid.innerHTML = '';
+  CHARS.forEach(function(c) {
+    var card = document.createElement('div');
+    card.className = 'char-card';
+    card.id = 'card-' + c.id;
+    var flagsHtml = c.flags.map(function(f) {
+      return '<span class="flag">' + f.t + '</span>';
+    }).join('');
+    card.innerHTML =
+      '<div class="char-header">' +
+        '<div class="char-avatar" style="background:' + c.bg + ';color:' + c.color + '">' + c.initials + '</div>' +
+        '<div><div class="char-name">' + c.name + '</div>' +
+        '<div class="char-role">' + c.role + (c.seats === 2 ? ' &nbsp;·&nbsp; 2 seats' : '') + '</div></div>' +
+      '</div>' +
+      (flagsHtml ? '<div class="char-flags">' + flagsHtml + '</div>' : '') +
+      '<button class="expand-btn" id="exp-' + c.id + '" onclick="toggleBio(\'' + c.id + '\')">Read full profile</button>' +
+      '<div class="char-bio" id="bio-' + c.id + '">' + c.bio + '</div>' +
+      '<div class="decision-row">' +
+        '<button class="dec-btn in" id="btn-in-' + c.id + '" onclick="decide(\'' + c.id + '\',\'in\')">Save</button>' +
+        '<button class="dec-btn out" id="btn-out-' + c.id + '" onclick="decide(\'' + c.id + '\',\'out\')">Leave behind</button>' +
+      '</div>' +
+      '<div class="reasoning-wrap" id="reason-wrap-' + c.id + '">' +
+        '<textarea rows="2" placeholder="Your reasoning…" oninput="saveReason(\'' + c.id + '\',this.value)"></textarea>' +
+      '</div>' +
+      '<div class="linked-hint" id="link-hint-' + c.id + '"></div>';
+    grid.appendChild(card);
+  });
+}
+
+function toggleBio(id) {
+  var bio = document.getElementById('bio-' + id);
+  var btn = document.getElementById('exp-' + id);
+  var open = bio.classList.contains('open');
+  bio.classList.toggle('open', !open);
+  btn.textContent = open ? 'Read full profile' : 'Hide profile';
+}
+
+function decide(id, val) {
+  decisions[id] = val;
+  var card = document.getElementById('card-' + id);
+  card.className = 'char-card' + (val === 'in' ? ' selected-in' : ' selected-out');
+  document.getElementById('btn-in-' + id).className = 'dec-btn in' + (val === 'in' ? ' active' : '');
+  document.getElementById('btn-out-' + id).className = 'dec-btn out' + (val === 'out' ? ' active' : '');
+  document.getElementById('reason-wrap-' + id).className = 'reasoning-wrap open';
+
+  var char = CHARS.find(function(c) { return c.id === id; });
+  if (char && char.link) {
+    var hint = document.getElementById('link-hint-' + id);
+    var linkedDec = decisions[char.link];
+    if (val === 'in' && !linkedDec) {
+      hint.textContent = 'Note: this passenger is linked — check the constraint above.';
+      hint.className = 'linked-hint show';
+    } else {
+      hint.className = 'linked-hint';
+    }
+    var linkedHint = document.getElementById('link-hint-' + char.link);
+    if (linkedHint) {
+      if (decisions[char.link] === 'in' && val !== 'in') {
+        linkedHint.textContent = 'Note: this passenger is linked — check the constraint above.';
+        linkedHint.className = 'linked-hint show';
+      } else {
+        linkedHint.className = 'linked-hint';
+      }
+    }
+  }
+
+  updateSeats();
+  checkSubmit();
+}
+
+function saveReason(id, val) { reasoning[id] = val; }
+
+function checkSubmit() {
+  var decided = Object.keys(decisions).length;
+  var btn = document.getElementById('submit-btn');
+  var hint = document.getElementById('submit-hint');
+  var allDone = decided >= 10;
+  btn.className = 'submit-btn' + (allDone ? ' ready' : '');
+  hint.textContent = allDone
+    ? 'All decisions made — view your summary'
+    : (10 - decided) + ' passenger' + (10 - decided !== 1 ? 's' : '') + ' still need a decision';
+}
+
+function showSummary() {
+  var decided = Object.keys(decisions).length;
+  if (decided < 10) {
+    var missing = CHARS.filter(function(c) { return !decisions[c.id]; }).map(function(c) { return c.name; }).join(', ');
+    alert('Please decide on all passengers first.\n\nStill undecided: ' + missing);
+    return;
+  }
+  buildSummary();
+  var panel = document.getElementById('summary-panel');
+  panel.className = 'summary-panel open';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function buildSummary() {
+  var inList = CHARS.filter(function(c) { return decisions[c.id] === 'in'; });
+  var outList = CHARS.filter(function(c) { return decisions[c.id] === 'out'; });
+  var totalSeats = inList.reduce(function(s, c) { return s + c.seats; }, 0);
+
+  document.getElementById('in-head').textContent = 'On the boat (' + totalSeats + ' seat' + (totalSeats !== 1 ? 's' : '') + ' used)';
+
+  var inEl = document.getElementById('summary-in');
+  var outEl = document.getElementById('summary-out');
+  inEl.innerHTML = '';
+  outEl.innerHTML = '';
+
+  inList.forEach(function(c) {
+    var d = document.createElement('div');
+    d.className = 'summary-person';
+    var seatsNote = c.seats === 2 ? ' <span style="font-size:10px;color:#888">(2 seats)</span>' : '';
+    var r = reasoning[c.id] ? '<div class="summary-reasoning">' + reasoning[c.id] + '</div>' : '';
+    d.innerHTML = '<div>' + c.name + seatsNote + r + '</div>';
+    inEl.appendChild(d);
+  });
+  outList.forEach(function(c) {
+    var d = document.createElement('div');
+    d.className = 'summary-person';
+    var r = reasoning[c.id] ? '<div class="summary-reasoning">' + reasoning[c.id] + '</div>' : '';
+    d.innerHTML = '<div>' + c.name + r + '</div>';
+    outEl.appendChild(d);
+  });
+
+  var warns = [];
+  if (totalSeats > 7) warns.push('Over capacity: ' + totalSeats + ' seats used (maximum is 7).');
+  var amyIn = decisions['amy'] === 'in', pattyIn = decisions['patty'] === 'in';
+  if (amyIn && !pattyIn) warns.push('Amy is on the boat but Patty is not — Amy said she refuses to board without her mother.');
+  if (pattyIn && !amyIn) warns.push('Patty is on the boat without Amy — who will care for her?');
+  var warnEl = document.getElementById('constraint-warnings');
+  warnEl.innerHTML = warns.map(function(w) {
+    return '<div class="constraint-warn">' + w + '</div>';
+  }).join('');
+
+  var txt = 'THE LIFEBOAT — My Decisions\n' + '='.repeat(36) + '\n\n';
+  txt += 'ON THE BOAT (' + totalSeats + ' seats used):\n';
+  inList.forEach(function(c) {
+    txt += '  ' + c.name + (c.seats === 2 ? ' [2 seats]' : '') + '\n';
+    if (reasoning[c.id]) txt += '    Reason: ' + reasoning[c.id] + '\n';
+  });
+  txt += '\nLEFT BEHIND:\n';
+  outList.forEach(function(c) {
+    txt += '  ' + c.name + '\n';
+    if (reasoning[c.id]) txt += '    Reason: ' + reasoning[c.id] + '\n';
+  });
+  if (warns.length) { txt += '\nCONSTRAINT FLAGS:\n'; warns.forEach(function(w) { txt += '  * ' + w + '\n'; }); }
+  document.getElementById('copy-area').value = txt;
+}
+
+function doCopy() {
+  var a = document.getElementById('copy-area');
+  a.className = 'copy-area open';
+  a.select();
+  document.execCommand('copy');
+  event.target.textContent = 'Copied!';
+  setTimeout(function() { event.target.textContent = 'Copy as text'; }, 1500);
+}
+
+function resetAll() {
+  decisions = {}; reasoning = {};
+  buildGrid(); initSeats(); updateSeats(); checkSubmit();
+  document.getElementById('summary-panel').className = 'summary-panel';
+}
+
+initSeats();
+buildGrid();
+checkSubmit();
+</script>
+</body>
+</html>
