@@ -38,13 +38,15 @@ h1{font-size:22px;font-weight:500;margin-bottom:4px;color:#1a1a1a}
 .flag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;background:#FAEEDA;color:#633806;border:0.5px solid #EF9F27}
 .char-bio{font-size:12px;color:#555;line-height:1.6;margin-bottom:8px;display:none}
 .char-bio.open{display:block}
-.expand-btn{font-size:11px;color:#888;background:none;border:none;cursor:pointer;padding:2px 0;text-align:left;font-family:inherit;display:block;margin-bottom:8px}
-.expand-btn:hover{color:#444}
+.expand-btn{font-size:13px;font-weight:500;color:#065A82;background:#EEF5FC;border:0.5px solid #378ADD;border-radius:6px;cursor:pointer;padding:5px 10px;text-align:left;font-family:inherit;display:inline-block;margin-bottom:10px;transition:background 0.15s}
+.expand-btn:hover{background:#d8ecfa}
 .decision-row{display:flex;gap:6px}
 .dec-btn{flex:1;padding:7px 0;font-size:12px;border-radius:8px;border:0.5px solid #ddd;background:#f5f5f3;color:#1a1a1a;cursor:pointer;font-family:inherit;transition:background 0.15s}
 .dec-btn:hover{background:#ebebeb}
 .dec-btn.in.active{background:#1D9E75;border-color:#0F6E56;color:white}
 .dec-btn.out.active{background:#E24B4A;border-color:#A32D2D;color:white}
+.dec-btn:disabled{opacity:0.35;cursor:not-allowed;background:#f5f5f3}
+.dec-btn:disabled:hover{background:#f5f5f3}
 .reasoning-wrap{margin-top:8px;display:none}
 .reasoning-wrap.open{display:block}
 .reasoning-wrap textarea{width:100%;font-size:12px;padding:6px 8px;border:0.5px solid #ddd;border-radius:8px;font-family:inherit;background:#f8f7f4;color:#1a1a1a;resize:none;line-height:1.5}
@@ -98,9 +100,9 @@ h1{font-size:22px;font-weight:500;margin-bottom:4px;color:#1a1a1a}
 </div>
 
 <div class="constraint-badges">
-  <span class="badge">Sammy + Spot occupy 2 seats</span>
-  <span class="badge">Amy refuses to board without Patty</span>
-  <span class="badge">Chaplain Kang has volunteered to stay</span>
+  <span class="badge">Toby + Bear occupy 2 seats</span>
+  <span class="badge">Chloe refuses to board without Silas</span>
+  <span class="badge">Chaplain Thomas has volunteered to stay</span>
 </div>
 
 <div class="section-label">The passengers — click "Read full profile" to learn more</div>
@@ -135,35 +137,35 @@ h1{font-size:22px;font-weight:500;margin-bottom:4px;color:#1a1a1a}
 
 <script>
 var CHARS = [
-  {id:'robin', name:'Captain Robin', role:'Ship captain', initials:'CR', color:'#185FA5', bg:'#E6F1FB',
-   bio:'Has been sailing for over 30 years and has captained this ship for the last 10. She has no spouse or immediate family. She also has a rather severe drinking problem.',
+  {id:'elias', name:'Captain Elias', role:'Ship captain', initials:'CE', color:'#185FA5', bg:'#E6F1FB',
+   bio:'Has been sailing for over 30 years and has captained the ship for the last 10. She has no living relatives and suffers from severe and undiagnosed PTSD. She reportedly "froze" during the initial minutes of the ship\'s collision.',
    flags:[], seats:1, link:null},
-  {id:'joe', name:'Joe Schmoe', role:'Maritime author', initials:'JS', color:'#854F0B', bg:'#FAEEDA',
-   bio:'Author of many how-to manuals on sailing, navigation, and engine propulsion. He is aboard to do research. Though he has written extensively, he has never actually put theory into practice.',
+  {id:'sterling', name:'Mr. Sterling', role:'Maritime author', initials:'MS', color:'#854F0B', bg:'#FAEEDA',
+   bio:'A world-renowned scholar of Marine Logistics and Survival Psychology. He has written manuals on navigation, sailing, and engine propulsion. He has never, however, put any of the theories of his writing into practice and has very limited real-world experience.',
    flags:[], seats:1, link:null},
-  {id:'nakamura', name:'Dr. Nakamura', role:'General practitioner', initials:'DN', color:'#3C3489', bg:'#EEEDFE',
-   bio:'A skilled general practitioner with a specialty in treating trauma cases. Both her children were killed in the initial moments of the wreck. She harbors great animosity toward the captain and is currently extremely apathetic and ambivalent toward those around her.',
+  {id:'vance', name:'Dr. Vance', role:'Trauma surgeon', initials:'DV', color:'#3C3489', bg:'#EEEDFE',
+   bio:'A highly skilled trauma surgeon with previous experience as a general practitioner. Her children were unfortunately killed in the early moments of the accident. She blames the captain\'s response for the event and is currently extremely apathetic towards the other passengers and their conditions.',
    flags:[], seats:1, link:null},
-  {id:'patty', name:'Patty O\'Brian', role:'Former frontiersman', initials:'PO', color:'#0F6E56', bg:'#E1F5EE',
-   bio:'Spent the last thirty years in the Alaskan wilderness. She was once a strong frontiersman but now depends upon her daughter due to Alzheimer\'s.',
-   flags:[{t:'Linked: Amy refuses to board without her'}], seats:1, link:'amy'},
-  {id:'sammy', name:'Sammy & Spot', role:'Child + service dog', initials:'SS', color:'#993556', bg:'#FBEAF0',
-   bio:'A six-year-old boy who was orphaned in the wreck. He has a rare disease and doctors believe he will not live past 16 years of age. He has a service dog, Spot, who must accompany him — Spot will take up one of the remaining seats. Sammy refuses to leave the ship without Spot.',
-   flags:[{t:'Sammy + Spot occupy 2 seats'}], seats:2, link:null},
-  {id:'tilly', name:'Tilly Sharma', role:'Personal trainer', initials:'TS', color:'#993C1D', bg:'#FAECE7',
-   bio:'The "personal trainer to the stars," helping clients like Gal Gadot and The Rock build strong bodies. She has the strength of ten body builders. She is also a diabetic, having only a short supply of insulin remaining.',
+  {id:'silas', name:'Silas', role:'Former engineer & frontiersman', initials:'SI', color:'#0F6E56', bg:'#E1F5EE',
+   bio:'A retired structural engineer specializing in large marine craft. He spent his early retirement years as a survivalist in the Alaskan wilderness. He has early-onset dementia and requires a good deal of supervision, often becoming suddenly confused about his surroundings. He depends on his granddaughter, Chloe, for all his care.',
+   flags:[{t:'Linked: Chloe refuses to board without him'}], seats:1, link:'chloe'},
+  {id:'toby', name:'Toby & Bear', role:'Child + service dog', initials:'TB', color:'#993556', bg:'#FBEAF0',
+   bio:'Toby is a seven-year-old boy orphaned during the wreck. He has a rare disease, and doctors believe he will not live past 17 years of age. He has a service dog, Bear, who must accompany him. Toby refuses to board without Bear, a 150-pound Newfoundland. Because of the dog\'s size, Bear will occupy one of the seats on the lifeboat.',
+   flags:[{t:'Toby + Bear occupy 2 seats'}], seats:2, link:null},
+  {id:'rhea', name:'Rhea', role:'Professional athlete trainer', initials:'RH', color:'#993C1D', bg:'#FAECE7',
+   bio:'A former Olympian in multiple track and field events, she now serves as a personal trainer for professional athletes. She has tremendous strength and stamina, so much so that she has been studied by Kinesiologists due to her impressive performances. She has a chronic heart arrhythmia that requires daily medication, of which she only has a short supply remaining.',
    flags:[], seats:1, link:null},
-  {id:'kang', name:'Chaplain Kang', role:'Ship chaplain', initials:'CK', color:'#444441', bg:'#F1EFE8',
-   bio:'The chaplain of the ship. Volunteering to be cast out, he nevertheless seems to have a calming effect on the entire group.',
+  {id:'thomas', name:'Chaplain Thomas', role:'Ship chaplain', initials:'CT', color:'#444441', bg:'#F1EFE8',
+   bio:'A soft-spoken chaplain well regarded for his work in conflict mediation. He has volunteered to be left behind. However, his presence seems to have a calming effect on the group.',
    flags:[{t:'Has volunteered to stay behind'}], seats:1, link:null},
-  {id:'amy', name:'Amy O\'Brian', role:'Fishing vessel owner', initials:'AO', color:'#0F6E56', bg:'#E1F5EE',
-   bio:'The young, vibrant, and strong daughter of Patty O\'Brian, having lived with her in Alaska while owning and operating her own fishing vessel. She refuses to board the lifeboat without her mother.',
-   flags:[{t:'Linked: refuses to board without Patty'}], seats:1, link:'patty'},
-  {id:'larry', name:'Larry Moony', role:'Passenger', initials:'LM', color:'#A32D2D', bg:'#FCEBEB',
-   bio:'A hysterical basket case. However, he clutches tightly to his chest an essential survival pack, filled with canned goods, a water pump, and a flare gun. He threatens to throw the pack overboard unless given a spot on the lifeboat.',
+  {id:'chloe', name:'Chloe', role:'Fishing boat owner & mechanic', initials:'CH', color:'#0F6E56', bg:'#E1F5EE',
+   bio:"Silas's granddaughter. Young and vibrant, she lived with Silas while he was in Alaska. She owned and operated her own large fishing boat and made a side-living as a marine mechanic. She knows how to operate and repair the vessel. She refuses to board without Silas.",
+   flags:[{t:'Linked: refuses to board without Silas'}], seats:1, link:'silas'},
+  {id:'victor', name:'Victor', role:'Passenger', initials:'VI', color:'#A32D2D', bg:'#FCEBEB',
+   bio:'A terrified passenger who managed to grab a survival pack containing canned goods, a flare gun, a solar-powered distress beacon and a small water purifier. He is suffering from an extended panic attack that hasn\'t subsided since the wreck. He is threatening to throw the pack overboard unless he is given the first seat on the lifeboat.',
    flags:[], seats:1, link:null},
-  {id:'ellie', name:'Ellie Santiago', role:'Archaeology student', initials:'ES', color:'#534AB7', bg:'#EEEDFE',
-   bio:'A 26-year-old archaeology major, five months pregnant and newly married. She was on her way to meet her husband on a dig before the disaster struck. The pregnancy was due to a short fling with an Italian man two months after her marriage. She has not yet informed her husband of the affair.',
+  {id:'casey', name:'Casey', role:'Archaeology student', initials:'CA', color:'#534AB7', bg:'#EEEDFE',
+   bio:'A 26-year-old who recently graduated with her master\'s in archaeology. She is currently five months pregnant. She is acting as a surrogate for a family that has been unable to conceive. The compensation from this work will help her pay off her student loans. She was on her way to meet the family before the disaster struck. She views her pregnancy strictly as a professional contract she is determined to fulfill.',
    flags:[], seats:1, link:null},
 ];
 
@@ -241,6 +243,23 @@ function toggleBio(id) {
 }
 
 function decide(id, val) {
+  var current = decisions[id];
+
+  // Toggle off: clicking the already-active button clears the decision
+  if (current === val) {
+    delete decisions[id];
+    var card = document.getElementById('card-' + id);
+    card.className = 'char-card';
+    document.getElementById('btn-in-' + id).className = 'dec-btn in';
+    document.getElementById('btn-out-' + id).className = 'dec-btn out';
+    document.getElementById('reason-wrap-' + id).className = 'reasoning-wrap';
+    clearLinkedHint(id);
+    enforcePairedConstraint();
+    updateSeats();
+    checkSubmit();
+    return;
+  }
+
   decisions[id] = val;
   var card = document.getElementById('card-' + id);
   card.className = 'char-card' + (val === 'in' ? ' selected-in' : ' selected-out');
@@ -251,8 +270,7 @@ function decide(id, val) {
   var char = CHARS.find(function(c) { return c.id === id; });
   if (char && char.link) {
     var hint = document.getElementById('link-hint-' + id);
-    var linkedDec = decisions[char.link];
-    if (val === 'in' && !linkedDec) {
+    if (val === 'in' && !decisions[char.link]) {
       hint.textContent = 'Note: this passenger is linked — check the constraint above.';
       hint.className = 'linked-hint show';
     } else {
@@ -269,8 +287,41 @@ function decide(id, val) {
     }
   }
 
+  enforcePairedConstraint();
   updateSeats();
   checkSubmit();
+}
+
+// If either Silas or Chloe is saved, disable the "Leave behind" button on the other.
+// When neither is saved (or one is toggled off), re-enable both.
+function enforcePairedConstraint() {
+  var PAIR = ['silas', 'chloe'];
+  var eitherSaved = PAIR.some(function(id) { return decisions[id] === 'in'; });
+  PAIR.forEach(function(id) {
+    var outBtn = document.getElementById('btn-out-' + id);
+    if (!outBtn) return;
+    var thisSaved = decisions[id] === 'in';
+    var partnerSaved = PAIR.filter(function(x){ return x !== id; })
+                           .some(function(x){ return decisions[x] === 'in'; });
+    // Disable "Leave behind" if the partner is saved (and this one isn't already saved)
+    if (partnerSaved && !thisSaved) {
+      outBtn.disabled = true;
+      outBtn.title = 'These two passengers must stay together — see the constraint above.';
+    } else {
+      outBtn.disabled = false;
+      outBtn.title = '';
+    }
+  });
+}
+
+function clearLinkedHint(id) {
+  var hint = document.getElementById('link-hint-' + id);
+  if (hint) hint.className = 'linked-hint';
+  var char = CHARS.find(function(c) { return c.id === id; });
+  if (char && char.link) {
+    var linkedHint = document.getElementById('link-hint-' + char.link);
+    if (linkedHint) linkedHint.className = 'linked-hint';
+  }
 }
 
 function saveReason(id, val) { reasoning[id] = val; }
@@ -279,20 +330,14 @@ function checkSubmit() {
   var decided = Object.keys(decisions).length;
   var btn = document.getElementById('submit-btn');
   var hint = document.getElementById('submit-hint');
-  var allDone = decided >= 10;
-  btn.className = 'submit-btn' + (allDone ? ' ready' : '');
-  hint.textContent = allDone
+  btn.className = 'submit-btn ready';
+  var remaining = 10 - decided;
+  hint.textContent = remaining === 0
     ? 'All decisions made — view your summary'
-    : (10 - decided) + ' passenger' + (10 - decided !== 1 ? 's' : '') + ' still need a decision';
+    : remaining + ' passenger' + (remaining !== 1 ? 's' : '') + ' still undecided — summary available anytime';
 }
 
 function showSummary() {
-  var decided = Object.keys(decisions).length;
-  if (decided < 10) {
-    var missing = CHARS.filter(function(c) { return !decisions[c.id]; }).map(function(c) { return c.name; }).join(', ');
-    alert('Please decide on all passengers first.\n\nStill undecided: ' + missing);
-    return;
-  }
   buildSummary();
   var panel = document.getElementById('summary-panel');
   panel.className = 'summary-panel open';
@@ -327,11 +372,46 @@ function buildSummary() {
     outEl.appendChild(d);
   });
 
+  var undecided = CHARS.filter(function(c) { return !decisions[c.id]; });
+  if (undecided.length) {
+    var summaryGrid = document.querySelector('.summary-grid');
+    if (summaryGrid) summaryGrid.style.gridTemplateColumns = '1fr 1fr 1fr';
+    var undecEl = document.getElementById('summary-undecided');
+    if (!undecEl) {
+      var col = document.createElement('div');
+      var head = document.createElement('div');
+      head.className = 'summary-col-head';
+      head.style.color = '#888';
+      head.textContent = 'Not yet decided';
+      col.appendChild(head);
+      var list = document.createElement('div');
+      list.id = 'summary-undecided';
+      col.appendChild(list);
+      summaryGrid.appendChild(col);
+    }
+    var undecEl2 = document.getElementById('summary-undecided');
+    if (undecEl2) {
+      undecEl2.innerHTML = '';
+      undecided.forEach(function(c) {
+        var d = document.createElement('div');
+        d.className = 'summary-person';
+        d.style.color = '#888';
+        d.innerHTML = c.name;
+        undecEl2.appendChild(d);
+      });
+    }
+  } else {
+    var summaryGrid = document.querySelector('.summary-grid');
+    if (summaryGrid) summaryGrid.style.gridTemplateColumns = '1fr 1fr';
+    var old = document.getElementById('summary-undecided');
+    if (old && old.parentNode) old.parentNode.remove();
+  }
+
   var warns = [];
   if (totalSeats > 7) warns.push('Over capacity: ' + totalSeats + ' seats used (maximum is 7).');
-  var amyIn = decisions['amy'] === 'in', pattyIn = decisions['patty'] === 'in';
-  if (amyIn && !pattyIn) warns.push('Amy is on the boat but Patty is not — Amy said she refuses to board without her mother.');
-  if (pattyIn && !amyIn) warns.push('Patty is on the boat without Amy — who will care for her?');
+  var chloeIn = decisions['chloe'] === 'in', silasIn = decisions['silas'] === 'in';
+  if (chloeIn && !silasIn) warns.push('Chloe is on the boat but Silas is not — Chloe said she refuses to board without him.');
+  if (silasIn && !chloeIn) warns.push('Silas is on the boat without Chloe — who will care for him?');
   var warnEl = document.getElementById('constraint-warnings');
   warnEl.innerHTML = warns.map(function(w) {
     return '<div class="constraint-warn">' + w + '</div>';
@@ -348,6 +428,11 @@ function buildSummary() {
     txt += '  ' + c.name + '\n';
     if (reasoning[c.id]) txt += '    Reason: ' + reasoning[c.id] + '\n';
   });
+  var undecidedList = CHARS.filter(function(c) { return !decisions[c.id]; });
+  if (undecidedList.length) {
+    txt += '\nNOT YET DECIDED:\n';
+    undecidedList.forEach(function(c) { txt += '  ' + c.name + '\n'; });
+  }
   if (warns.length) { txt += '\nCONSTRAINT FLAGS:\n'; warns.forEach(function(w) { txt += '  * ' + w + '\n'; }); }
   document.getElementById('copy-area').value = txt;
 }
@@ -363,7 +448,7 @@ function doCopy() {
 
 function resetAll() {
   decisions = {}; reasoning = {};
-  buildGrid(); initSeats(); updateSeats(); checkSubmit();
+  buildGrid(); initSeats(); updateSeats(); checkSubmit(); enforcePairedConstraint();
   document.getElementById('summary-panel').className = 'summary-panel';
 }
 
